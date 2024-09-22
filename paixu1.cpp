@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
 
 // 冒泡排序
 void bubblesort(std::vector<int>& arr) {
@@ -62,19 +66,23 @@ int main() {
     std::vector<int> arr1 = arr;
     std::vector<int> arr2 = arr;
     std::vector<int> arr3 = arr;
-    clock_t start, end;
-    start = clock();
+    // 显示数组的前10个元素
+    for (int i = 0; i < 10; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+    auto start = system_clock::now();
     bubblesort(arr1);
-    end = clock();
-    std::cout << "冒泡排序用时：" << (double)(end - start) / CLOCKS_PER_SEC << "s" << std::endl;
-    start = clock();
+    auto end = system_clock::now();
+    std::cout << "冒泡排序用时：" << duration<double>(end - start).count() << "s" << std::endl;
+    start = system_clock::now();
     insertsort(arr2);
-    end = clock();
-    std::cout << "插入排序用时：" << (double)(end - start) / CLOCKS_PER_SEC << "s" << std::endl;
-    start = clock();
+    end = system_clock::now();
+    std::cout << "插入排序用时：" << duration<double>(end - start).count() << "s" << std::endl;
+    start = system_clock::now();
     quicksort(arr3, 0, arr3.size() - 1);
-    end = clock();
-    std::cout << "快速排序用时：" << (double)(end - start) / CLOCKS_PER_SEC << "s" << std::endl;
+    end = system_clock::now();
+    std::cout << "快速排序用时：" << duration<double>(end - start).count() << "s" << std::endl;
     return 0;
 }
 
