@@ -95,14 +95,15 @@ int findKthSmallest(vector<int>& nums, int k) {
 int main() {
     vector<int> nums;
     srand(time(0));
-    for (int i = 0; i < 1000000; i++) {
-        nums.push_back(rand() % 1000000);
+    int num;
+    cout << "请输入num值：";
+    cin >> num;
+    for (int i = 0; i < num; i++) {
+        nums.push_back(rand() % (num * 10));
     }
     vector<int> nums1 = nums;
     vector<int> nums2 = nums;
-    int k;
-    cout << "请输入k值：";
-    cin >> k;
+    int k = num / 2;
     auto start = high_resolution_clock::now();
     cout << "第" << k << "小的数为：" << findaftersort(nums, k) << endl;
     auto end = high_resolution_clock::now();
