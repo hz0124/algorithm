@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <algorithm>
 #include <chrono>
+#include <cmath>
+#include <fstream>
 using namespace std;
 using namespace std::chrono;
 
@@ -96,29 +98,47 @@ int main() {
     vector<int> nums;
     srand(time(0));
     int num;
-    cout << "请输入num值：";
-    cin >> num;
-    for (int i = 0; i < num; i++) {
-        nums.push_back(rand() % (num * 10));
+    // 设置3个数组，分别用于记录排序后查找、分治查找、STL库函数查找的时间
+    vector<int> time1, time2, time3;
+    for(int i = 1; i < 6; i++){
+        num = pow(10, i);
+        for (int j = 0; j < num; j++) {
+            nums.push_back((int) (((double)rand() / RAND_MAX) * num * 10));
+        }
+        vector<int> nums1 = nums;
+        vector<int> nums2 = nums;
+        int k = num / 2;
+        auto start = high_resolution_clock::now();
+        cout << "第" << k << "小的数为：" << findaftersort(nums, k) << endl;
+        auto end = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(end - start);
+        cout << "排序后查找所用时间：" << duration.count() << "ms" << endl;
+        time1.push_back(duration.count());
+        start = high_resolution_clock::now();
+        cout << "第" << k << "小的数为：" << findKthSmallest(nums1, k) << endl;
+        end = high_resolution_clock::now();
+        duration = duration_cast<microseconds>(end - start);
+        cout << "分治查找所用时间：" << duration.count() << "ms" << endl;
+        time2.push_back(duration.count());
+        start = high_resolution_clock::now(); // 调用stl库函数
+        nth_element(nums2.begin(), nums2.begin() + k - 1, nums2.end());
+        cout << "第" << k << "小的数为：" << nums2[k - 1] << endl;
+        end = high_resolution_clock::now();
+        duration = duration_cast<microseconds>(end - start);
+        cout << "STL库函数所用时间：" << duration.count() << "ms" << endl;
+        time3.push_back(duration.count());
     }
-    vector<int> nums1 = nums;
-    vector<int> nums2 = nums;
-    int k = num / 2;
-    auto start = high_resolution_clock::now();
-    cout << "第" << k << "小的数为：" << findaftersort(nums, k) << endl;
-    auto end = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(end - start);
-    cout << "排序后查找所用时间：" << duration.count() << "ms" << endl;
-    start = high_resolution_clock::now();
-    cout << "第" << k << "小的数为：" << findKthSmallest(nums1, k) << endl;
-    end = high_resolution_clock::now();
-    duration = duration_cast<microseconds>(end - start);
-    cout << "分治查找所用时间：" << duration.count() << "ms" << endl;
-    start = high_resolution_clock::now(); // 调用stl库函数
-    nth_element(nums2.begin(), nums2.begin() + k - 1, nums2.end());
-    cout << "第" << k << "小的数为：" << nums2[k - 1] << endl;
-    end = high_resolution_clock::now();
-    duration = duration_cast<microseconds>(end - start);
-    cout << "STL库函数所用时间：" << duration.count() << "ms" << endl;
+    // 分别输出3个数组到三个文件中
+    ofstream file1("time1.txt");
+    ofstream file2("time2.txt");
+    ofstream file3("time3.txt");
+    for (int i = 0; i < time1.size(); i++) {
+        file1 << time1[i] << endl;
+        file2 << time2[i] << endl;
+        file3 << time3[i] << endl;
+    }
+    file1.close();
+    file2.close();
+    file3.close();
     return 0;
 }
